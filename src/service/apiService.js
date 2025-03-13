@@ -121,7 +121,41 @@ const handleUpdateOrganArticleService = async (data) => {
     }
 }
 
+const getArticleWithPaginateService = async (page, limit) => {
+    try {
+        let offset = (page - 1) * limit;
+
+        const { count, rows } = await db.Organ.findAndCountAll({
+            order: [['id', 'DESC']],
+            offset: offset,
+            limit: limit
+        })
+
+        let totalPages = Math.ceil(count / limit);
+
+        let data = {
+            totalRows: count,
+            totalPages: totalPages,
+            article: rows
+        }
+
+        return {
+            EC: 0,
+            EM: "Lấy data thành công",
+            DT: data
+        }
+
+    } catch (e) {
+        console.log(e);
+        return {
+            EC: -2,
+            EM: "Có gì đó sai sai"
+        }
+    }
+}
+
 module.exports = {
     getAllOrganArticleService, createNewOrganArticleService,
-    handleDeleteOrganArticleService, handleUpdateOrganArticleService
+    handleDeleteOrganArticleService, handleUpdateOrganArticleService,
+    getArticleWithPaginateService
 }

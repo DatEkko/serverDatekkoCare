@@ -2,8 +2,17 @@ import apiService from "./../service/apiService";
 
 const readFunction = async (req, res) => {
     try {
-        let data = await apiService.getAllOrganArticleService();
-        return res.status(200).json(data);
+        if (req.query.page && req.query.limit) {
+            let page = req.query.page;
+            let limit = req.query.limit;
+
+            let data = await apiService.getArticleWithPaginateService(+page, +limit);
+            return res.status(200).json(data);
+
+        } else {
+            let data = await apiService.getAllOrganArticleService();
+            return res.status(200).json(data)
+        }
 
     } catch (e) {
         console.log(e);
@@ -52,6 +61,8 @@ const updateFunction = async (req, res) => {
         })
     }
 }
+
+
 
 module.exports = {
     readFunction, createFunction, deleteFunction, updateFunction

@@ -17,6 +17,12 @@ configCORS(app);
 //config view engine
 configViewEngine(app);
 
+
+// Cấu hình body-parser với giới hạn cao hơn (tăng lên 100MB)
+app.use(bodyParser.json({ limit: "100mb" }));
+app.use(bodyParser.urlencoded({ limit: "100mb", extended: true }));
+
+
 //config body-parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
