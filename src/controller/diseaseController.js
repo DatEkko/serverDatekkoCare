@@ -62,6 +62,49 @@ const updateFunction = async (req, res) => {
     }
 }
 
+const getKoiProject = async (req, res) => {
+    try {
+        let data = await diseaseService.getKoiProjectService();
+        return res.status(200).json(data)
+
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            EC: -1,
+            EM: "Error from server"
+        })
+    }
+}
+
+const getMaintainProject = async (req, res) => {
+    try {
+        let data = await diseaseService.getMaintainProjectService();
+        return res.status(200).json(data)
+
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            EC: -1,
+            EM: "Error from server"
+        })
+    }
+}
+
+const getDesignProject = async (req, res) => {
+    try {
+        let data = await diseaseService.getDesignProjectService();
+        return res.status(200).json(data)
+
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            EC: -1,
+            EM: "Error from server"
+        })
+    }
+}
+
 module.exports = {
-    readFunction, createFunction, deleteFunction, updateFunction
+    readFunction, createFunction, deleteFunction, updateFunction,
+    getKoiProject, getMaintainProject, getDesignProject
 }

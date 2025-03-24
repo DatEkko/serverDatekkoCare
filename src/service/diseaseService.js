@@ -1,3 +1,4 @@
+import { where } from 'sequelize';
 import db from '../models/index';
 
 const getArticleWithPaginateService = async (page, limit) => {
@@ -8,13 +9,10 @@ const getArticleWithPaginateService = async (page, limit) => {
             order: [['id', 'DESC']],
             offset: offset,
             limit: limit,
-            include: [
-                {
-                    model: db.Organ,
-                    attributes: ["id", "name"], // Chỉ lấy ID và tên của Organ (tuỳ chỉnh theo nhu cầu)
-                },
-            ],
-
+            include: [{
+                model: db.Allcode,
+                attributes: ['key_code', 'value'] // Chỉ lấy cột cần thiết
+            }]
         })
 
         let totalPages = Math.ceil(count / limit);
@@ -43,13 +41,12 @@ const getArticleWithPaginateService = async (page, limit) => {
 const getAllDiseaseArticleService = async () => {
     try {
         let data = await db.Disease.findAll({
-            include: [
-                {
-                    model: db.Organ,
-                    attributes: ["id", "name"]
-                },
-            ],
+            include: [{
+                model: db.Allcode,
+                attributes: ['key_code', 'value'] // Chỉ lấy cột cần thiết
+            }]
         });
+
         if (data && data.length > 0) {
             return {
                 EC: 0,
@@ -75,7 +72,7 @@ const getAllDiseaseArticleService = async () => {
 
 const createNewDiseaseArticleService = async (data) => {
     try {
-        if (!data.name || !data.content || !data.author || !data.organ_id) {
+        if (!data.name || !data.content || !data.author) {
             return {
                 EC: -2,
                 EM: "Thiếu dữ liệu đầu vào",
@@ -85,10 +82,10 @@ const createNewDiseaseArticleService = async (data) => {
 
         await db.Disease.create({
             name: data.name,
-            organ_id: +data.organ_id,
             description: data.content,
             cre: data.author,
-            image: data.image
+            image: data.image,
+            type_project: data.type_project
         });
 
         return {
@@ -139,7 +136,7 @@ const handleDeleteDiseaseArticleService = async (id) => {
 
 const handleUpdateDiseaseArticleService = async (data) => {
     try {
-        if (!data.name || !data.description || !data.cre || !data.organ_id) {
+        if (!data.name || !data.description || !data.cre) {
             return {
                 EC: -2,
                 EM: "Thiếu dữ liệu đầu vào",
@@ -168,8 +165,102 @@ const handleUpdateDiseaseArticleService = async (data) => {
     }
 }
 
+const getKoiProjectService = async () => {
+    try {
+        let data = await db.Disease.findAll({
+            where: {
+                type_project: 3
+            }
+        });
+
+        if (data && data.length > 0) {
+            return {
+                EC: 0,
+                EM: "Get KOI project success",
+                DT: data
+            }
+        }
+
+        return {
+            EC: 1,
+            EM: "No data",
+            DT: []
+        }
+
+    } catch (e) {
+        console.log(e);
+        return {
+            EC: -2,
+            EM: "Có gì đó sai sai"
+        }
+    }
+}
+
+const getMaintainProjectService = async () => {
+    try {
+        let data = await db.Disease.findAll({
+            where: {
+                type_project: 2
+            }
+        });
+
+        if (data && data.length > 0) {
+            return {
+                EC: 0,
+                EM: "Get Maintain project success",
+                DT: data
+            }
+        }
+
+        return {
+            EC: 1,
+            EM: "No data",
+            DT: []
+        }
+
+    } catch (e) {
+        console.log(e);
+        return {
+            EC: -2,
+            EM: "Có gì đó sai sai"
+        }
+    }
+}
+
+const getDesignProjectService = async () => {
+    try {
+        let data = await db.Disease.findAll({
+            where: {
+                type_project: 1
+            }
+        });
+
+        if (data && data.length > 0) {
+            return {
+                EC: 0,
+                EM: "Get Design project success",
+                DT: data
+            }
+        }
+
+        return {
+            EC: 1,
+            EM: "No data",
+            DT: []
+        }
+
+    } catch (e) {
+        console.log(e);
+        return {
+            EC: -2,
+            EM: "Có gì đó sai sai"
+        }
+    }
+}
+
 module.exports = {
     getAllDiseaseArticleService, getArticleWithPaginateService,
     createNewDiseaseArticleService, handleDeleteDiseaseArticleService,
-    handleUpdateDiseaseArticleService
+    handleUpdateDiseaseArticleService, getKoiProjectService, getMaintainProjectService,
+    getDesignProjectService
 }

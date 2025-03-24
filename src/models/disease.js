@@ -11,13 +11,12 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            Disease.belongsTo(models.Organ, { foreignKey: "organ_id" });
-            Disease.hasMany(models.Treatment, { foreignKey: "disease_id" });
+            Disease.belongsTo(models.Allcode, { foreignKey: "type_project", targetKey: "key_code" })
         }
     }
     Disease.init({
-        organ_id: DataTypes.INTEGER,
         name: DataTypes.STRING,
+        type_project: DataTypes.INTEGER,
         image: DataTypes.TEXT,
         description: DataTypes.TEXT,
         cre: DataTypes.STRING,

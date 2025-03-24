@@ -8,12 +8,6 @@ const getArticleWithPaginateService = async (page, limit) => {
             order: [['id', 'DESC']],
             offset: offset,
             limit: limit,
-            include: [
-                {
-                    model: db.Disease,
-                    attributes: ["id", "name"], // Chỉ lấy ID và tên của Organ (tuỳ chỉnh theo nhu cầu)
-                },
-            ],
         })
 
         let totalPages = Math.ceil(count / limit);
@@ -42,12 +36,6 @@ const getArticleWithPaginateService = async (page, limit) => {
 const getAllTreatmentArticleService = async () => {
     try {
         let data = await db.Treatment.findAll({
-            include: [
-                {
-                    model: db.Disease,
-                    attributes: ["id", "name"]
-                },
-            ],
         });
 
         if (data && data.length > 0) {
@@ -75,7 +63,7 @@ const getAllTreatmentArticleService = async () => {
 
 const createNewTreatmentArticleService = async (data) => {
     try {
-        if (!data.name || !data.content || !data.author || !data.disease_id) {
+        if (!data.name || !data.content || !data.author) {
             return {
                 EC: -2,
                 EM: "Thiếu dữ liệu đầu vào",
@@ -85,7 +73,6 @@ const createNewTreatmentArticleService = async (data) => {
 
         await db.Treatment.create({
             name: data.name,
-            disease_id: +data.disease_id,
             description: data.content,
             cre: data.author,
             image: data.image
@@ -140,7 +127,7 @@ const handleDeleteTreatmentArticleService = async (id) => {
 
 const handleUpdateTreatmentArticleService = async (data) => {
     try {
-        if (!data.name || !data.description || !data.cre || !data.disease_id) {
+        if (!data.name || !data.description || !data.cre) {
             return {
                 EC: -2,
                 EM: "Thiếu dữ liệu đầu vào",

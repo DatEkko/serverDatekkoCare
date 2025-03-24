@@ -154,8 +154,39 @@ const getArticleWithPaginateService = async (page, limit) => {
     }
 }
 
+const getServiceByIdService = async (id) => {
+    try {
+        let data = await db.Organ.findOne({
+            where: {
+                id: id
+            }
+        });
+
+        if (data) {
+            return {
+                EC: 0,
+                EM: "Get server success",
+                DT: data
+            }
+        }
+
+        return {
+            EC: 1,
+            EM: "No data",
+            DT: []
+        }
+
+    } catch (e) {
+        console.log(e);
+        return {
+            EC: -2,
+            EM: "Có gì đó sai sai"
+        }
+    }
+}
+
 module.exports = {
     getAllOrganArticleService, createNewOrganArticleService,
     handleDeleteOrganArticleService, handleUpdateOrganArticleService,
-    getArticleWithPaginateService
+    getArticleWithPaginateService, getServiceByIdService
 }
