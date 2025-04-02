@@ -3,6 +3,7 @@ import apiController from "./../controller/apiController";
 import diseaseController from "./../controller/diseaseController";
 import treatmentController from "./../controller/treatmentController";
 import allCodeController from "./../controller/allCodeController";
+import productController from "./../controller/productController";
 
 const router = express.Router();
 
@@ -35,8 +36,18 @@ const initApiRoutes = (app) => {
     router.delete('/treatment-delete', treatmentController.deleteFunction);
     router.put('/treatment-update', treatmentController.updateFunction);
 
+    //product
+    router.get('/product-read', productController.readFunction);
+    router.post('/product-create', productController.createFunction);
+    router.delete('/product-delete', productController.deleteFunction);
+    router.put('/product-update', productController.updateFunction);
+
     //allcode
     router.get('/allcode-project-read', allCodeController.getAllCodeProject);
+    router.get('/allcode-product-read', allCodeController.getAllCodeProduct);
+    router.get('/allcode-condition-read', allCodeController.getAllCodeCondition);
+
+
 
     return app.use("/api/v1", router)
 }
