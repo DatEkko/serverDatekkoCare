@@ -62,7 +62,52 @@ const updateFunction = async (req, res) => {
     }
 }
 
+const getListProductPageById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        let data = await productService.getListProductByIdService(+id);
+        return res.status(200).json(data)
+
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            EC: -1,
+            EM: "Error from server"
+        })
+    }
+}
+
+const getProductById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        let data = await productService.getProductByIdService(+id);
+        return res.status(200).json(data)
+
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            EC: -1,
+            EM: "Error from server"
+        })
+    }
+}
+
+const getRelatedProduct = async (req, res) => {
+    try {
+        let data = await productService.getRelatedProductService(req.body);
+        return res.status(200).json(data)
+
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            EC: -1,
+            EM: "Error from server"
+        })
+    }
+}
+
 module.exports = {
     readFunction, createFunction, deleteFunction,
-    updateFunction
+    updateFunction, getListProductPageById,
+    getProductById, getRelatedProduct
 }

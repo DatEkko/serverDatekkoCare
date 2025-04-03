@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     Treatment.init({
         name: DataTypes.STRING,
-        image: DataTypes.TEXT,
+        image: DataTypes.TEXT('long'),
         description: DataTypes.TEXT,
         cre: DataTypes.STRING
     }, {

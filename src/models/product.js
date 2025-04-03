@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         type_condition: DataTypes.INTEGER, // CONDITION - trong nhà hay ngoài trời
         name: DataTypes.STRING,
         description: DataTypes.TEXT,
-        image: DataTypes.TEXT,
+        image: DataTypes.TEXT('long'),
         price: DataTypes.DECIMAL(10, 2),
     }, {
         sequelize,

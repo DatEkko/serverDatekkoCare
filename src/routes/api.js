@@ -42,6 +42,11 @@ const initApiRoutes = (app) => {
     router.delete('/product-delete', productController.deleteFunction);
     router.put('/product-update', productController.updateFunction);
 
+    router.get('/product-read/:id', productController.getListProductPageById);
+    router.get('/detail-product/:id', productController.getProductById);
+    router.post('/related-product', productController.getRelatedProduct);
+
+
     //allcode
     router.get('/allcode-project-read', allCodeController.getAllCodeProject);
     router.get('/allcode-product-read', allCodeController.getAllCodeProduct);

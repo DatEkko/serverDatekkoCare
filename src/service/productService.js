@@ -1,4 +1,5 @@
 import db from '../models/index';
+const { Op } = require("sequelize");
 
 const getProductPaginateService = async (page, limit) => {
     try {
@@ -166,8 +167,120 @@ const handleUpdateProductService = async (data) => {
     }
 }
 
+const getListProductByIdService = async (id) => {
+    try {
+        let data = await db.Product.findAll({
+            where: {
+                [Op.or]: [
+                    { type_product: id },  // Tìm theo type_product
+                    { type_condition: id } // Hoặc tìm theo type_condition
+                ]
+            },
+            include: [
+                { model: db.Allcode, as: "TypeProduct", attributes: ["key_code", "value"] },
+                { model: db.Allcode, as: "TypeCondition", attributes: ["key_code", "value"] }
+            ]
+        });
+
+        if (data && data.length > 0) {
+            return {
+                EC: 0,
+                EM: "Get all product success",
+                DT: data
+            }
+        }
+
+        return {
+            EC: 1,
+            EM: "No data",
+            DT: []
+        }
+
+    } catch (e) {
+        console.log(e);
+        return {
+            EC: -2,
+            EM: "Có gì đó sai sai"
+        }
+    }
+}
+
+const getProductByIdService = async (id) => {
+    try {
+        let data = await db.Product.findOne({
+            where: {
+                id: +id
+            },
+            include: [
+                { model: db.Allcode, as: "TypeProduct", attributes: ["key_code", "value"] },
+                { model: db.Allcode, as: "TypeCondition", attributes: ["key_code", "value"] }
+            ]
+        });
+
+        if (data) {
+            return {
+                EC: 0,
+                EM: "Get product success",
+                DT: data
+            }
+        }
+
+        return {
+            EC: 1,
+            EM: "No data",
+            DT: []
+        }
+
+    } catch (e) {
+        console.log(e);
+        return {
+            EC: -2,
+            EM: "Có gì đó sai sai"
+        }
+    }
+}
+
+const getRelatedProductService = async (data) => {
+    try {
+        let relatedProducts = await db.Product.findAll({
+            where: {
+                type_product: +data.type_product, // Lọc theo type_product
+                id: { [db.Sequelize.Op.ne]: data.id } // Loại bỏ sản phẩm có id trùng với đầu vào
+            },
+            limit: 4,
+            include: [
+                { model: db.Allcode, as: "TypeProduct", attributes: ["key_code", "value"] },
+                { model: db.Allcode, as: "TypeCondition", attributes: ["key_code", "value"] }
+            ]
+        });
+
+        if (relatedProducts.length > 0) {
+            return {
+                EC: 0,
+                EM: "Get related products success",
+                DT: relatedProducts
+            };
+        }
+
+        return {
+            EC: 1,
+            EM: "No related products found",
+            DT: []
+        };
+
+    } catch (e) {
+        console.log(e);
+        return {
+            EC: -2,
+            EM: "Có gì đó sai sai"
+        };
+    }
+};
+
+
 module.exports = {
     getProductPaginateService, getAllProductService,
     createNewProductService, handleDeleteProductService,
-    handleUpdateProductService
+    handleUpdateProductService, getListProductByIdService,
+    getProductByIdService, getRelatedProductService
 }

@@ -19,7 +19,7 @@ module.exports = {
                 type: Sequelize.STRING
             },
             image: {
-                type: Sequelize.TEXT
+                type: Sequelize.TEXT("long")
             },
             description: {
                 type: Sequelize.TEXT
