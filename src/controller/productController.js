@@ -106,8 +106,46 @@ const getRelatedProduct = async (req, res) => {
     }
 }
 
+const getListProductShowCaseById = async (req, res) => {
+    try {
+        if (req.query.id && req.query.limit) {
+            let id = req.query.id;
+            let limit = req.query.limit;
+
+            let data = await productService.getListProductShowCaseByIdService(+id, +limit);
+            return res.status(200).json(data);
+        }
+
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            EC: -1,
+            EM: "Error from server"
+        })
+    }
+}
+
+const getRandomProduct = async (req, res) => {
+    try {
+        if (req.query.limit) {
+            let limit = req.query.limit;
+
+            let data = await productService.getRandomProductService(+limit);
+            return res.status(200).json(data);
+        }
+
+    } catch (e) {
+        console.log(e);
+        return res.status(500).json({
+            EC: -1,
+            EM: "Error from server"
+        })
+    }
+}
+
 module.exports = {
     readFunction, createFunction, deleteFunction,
     updateFunction, getListProductPageById,
-    getProductById, getRelatedProduct
+    getProductById, getRelatedProduct, getListProductShowCaseById,
+    getRandomProduct
 }

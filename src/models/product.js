@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         name: DataTypes.STRING,
         description: DataTypes.TEXT,
         image: DataTypes.TEXT('long'),
+        video_url: DataTypes.TEXT('long'),
         price: DataTypes.DECIMAL(10, 2),
     }, {
         sequelize,

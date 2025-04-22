@@ -1,5 +1,5 @@
 import db from '../models/index';
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 
 const getProductPaginateService = async (page, limit) => {
     try {
@@ -277,10 +277,83 @@ const getRelatedProductService = async (data) => {
     }
 };
 
+const getListProductShowCaseByIdService = async (id, limit) => {
+    try {
+        let data = await db.Product.findAll({
+            where: {
+                [Op.or]: [
+                    { type_product: +id },  // Tìm theo type_product
+                    { type_condition: +id } // Hoặc tìm theo type_condition
+                ]
+            },
+            limit: limit,
+            include: [
+                { model: db.Allcode, as: "TypeProduct", attributes: ["key_code", "value"] },
+                { model: db.Allcode, as: "TypeCondition", attributes: ["key_code", "value"] }
+            ]
+        });
+
+        if (data && data.length > 0) {
+            return {
+                EC: 0,
+                EM: "Get all product success",
+                DT: data
+            }
+        }
+
+        return {
+            EC: 1,
+            EM: "No data",
+            DT: []
+        }
+
+    } catch (e) {
+        console.log(e);
+        return {
+            EC: -2,
+            EM: "Có gì đó sai sai"
+        }
+    }
+}
+
+const getRandomProductService = async (limit) => {
+    try {
+        let data = await db.Product.findAll({
+            order: Sequelize.literal('RAND()'),
+            limit: limit,
+            include: [
+                { model: db.Allcode, as: "TypeProduct", attributes: ["key_code", "value"] },
+                { model: db.Allcode, as: "TypeCondition", attributes: ["key_code", "value"] }
+            ]
+        });
+
+        if (data && data.length > 0) {
+            return {
+                EC: 0,
+                EM: "Get all product success",
+                DT: data
+            }
+        }
+
+        return {
+            EC: 1,
+            EM: "No data",
+            DT: []
+        }
+
+    } catch (e) {
+        console.log(e);
+        return {
+            EC: -2,
+            EM: "Có gì đó sai sai"
+        }
+    }
+}
 
 module.exports = {
     getProductPaginateService, getAllProductService,
     createNewProductService, handleDeleteProductService,
     handleUpdateProductService, getListProductByIdService,
-    getProductByIdService, getRelatedProductService
+    getProductByIdService, getRelatedProductService,
+    getListProductShowCaseByIdService, getRandomProductService
 }

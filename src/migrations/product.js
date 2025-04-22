@@ -21,6 +21,9 @@ module.exports = {
             image: {
                 type: Sequelize.TEXT("long")
             },
+            video_url: {
+                type: Sequelize.TEXT("long")
+            },
             description: {
                 type: Sequelize.TEXT
             },

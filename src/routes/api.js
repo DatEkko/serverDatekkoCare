@@ -43,9 +43,10 @@ const initApiRoutes = (app) => {
     router.put('/product-update', productController.updateFunction);
 
     router.get('/product-read/:id', productController.getListProductPageById);
+    router.get('/product-showcase', productController.getListProductShowCaseById);
     router.get('/detail-product/:id', productController.getProductById);
     router.post('/related-product', productController.getRelatedProduct);
-
+    router.get('/random-product', productController.getRandomProduct);
 
     //allcode
     router.get('/allcode-project-read', allCodeController.getAllCodeProject);
